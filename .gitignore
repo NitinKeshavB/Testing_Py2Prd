@@ -1,0 +1,6 @@
+#ignore files
+.bash_history
+*.env
+*setupenv
+*venv
+*.cache
