@@ -17,3 +17,4 @@ def test_check_city_for_correct_city(city_name, expected_result):
     Asserts:
         The result of check_city(city_name) is equal to expected_result. """
     assert check_city(city_name) == expected_result
+
