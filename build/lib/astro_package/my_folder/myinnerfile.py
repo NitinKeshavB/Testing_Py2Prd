@@ -7,7 +7,8 @@
 # sys.path.insert(0,"/home/nitinkeshav/astro/")
 
 from astro_package.myouterfile import constant as c
-print(c) 
+
+print(c)
 
 import numpy as np
 

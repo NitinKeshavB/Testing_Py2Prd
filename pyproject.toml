@@ -58,6 +58,7 @@ profile = "black"
 multi_line_output = "VERTICAL_HANGING_INDENT"
 force_grid_wrap = 2
 line_length = 119
+skip_glob = "^(setupenv|tests)"
 
 
 [tool.pylint."messages control"]

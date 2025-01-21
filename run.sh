@@ -58,7 +58,7 @@ function publish:prod {
  }
 
   function release:prod {
-    release:test 
+    release:test
     publish:prod
 
  }
