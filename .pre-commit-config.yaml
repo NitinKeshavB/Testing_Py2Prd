@@ -41,9 +41,6 @@ repos:
     -   id: requirements-txt-fixer
     # Prevent addition of new git submodules.
     -   id: forbid-new-submodules
-    # Prevent committing directly to trunk (since Bitbucket wants us to pay for this feature)
-    -   id: no-commit-to-branch
-        args: ["--branch=main"]
 
 # -   repo: https://github.com/PyCQA/pylint
 #     rev: v3.3.3

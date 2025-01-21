@@ -1,19 +1,13 @@
+import json
+from pathlib import Path
 
-
-# import sys
-
-# print(sys.path)
-
-# sys.path.insert(0,"/home/nitinkeshav/astro/")
+import numpy as np
 
 from astro_package.myouterfile import constant as c
 
 print(c)
 
-import json
-from pathlib import Path
 
-import numpy as np
 
 print(np.__version__)
 
@@ -26,8 +20,6 @@ def check_city(city):
     with open(f'{this_dir}/city.json') as f:
         data = json.load(f)
 
-    #
-    #print(data)
     if city == data['city'].lower():
         return True
     else:

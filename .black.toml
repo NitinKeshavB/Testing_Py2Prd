@@ -1,5 +1,5 @@
 [black]
 line-length = 99
 exclude = [
-    "setupenv"
+    "env"
 ]
