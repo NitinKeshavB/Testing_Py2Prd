@@ -58,9 +58,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        pip install build
-        pip install pytest
-        pip install pytest-cov
+          /bin/bash -x run.sh install
     - name: testing package
       run: |
             /bin/bash -x run.sh test:all
