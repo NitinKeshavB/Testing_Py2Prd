@@ -1,9 +1,33 @@
-name: Pylint
+name: Publish_Astro_package
 
-on: [push]
+on:
+  pull_request:
+    types: [opened, synchronize]
+  push:
+    branches:
+      - main
+  #workflow_dispatch:
 
 jobs:
-  build:
+
+  check-versions:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9"]
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Tag Versions
+      run: |
+          git tag $(cat version.txt)
+
+  linting-code-quality-check:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -14,10 +38,79 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
+    - name: lint and code quality
+      run: |
+          pip install pre-commit
+    - name: lint and code quality
+      run: |
+          /bin/bash -x run.sh lint 
+
+  build-wheel-test:
+    needs:
+      - check-versions
+      - linting-code-quality-check
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9"]
+
+    steps:
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install pre-commit
-    - name: Analysing the code with pre
+        pip install build
+        pip install pytest
+        pip install pytest-cov
+    - name: testing package
       run: |
-        pre-commit run --all-files
+            /bin/bash -x run.sh test:all    
+    - name: Build dependencies
+      run: |
+          /bin/bash -x run.sh build
+    - name: upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: my-wheel-file
+        path: ./dist/*
+
+  publish:
+    needs:
+      - build-wheel-test
+      - check-versions
+      - linting-code-quality-check
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9"]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'    
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: download artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: my-wheel-file
+        path: ./dist/
+    - name: install twine
+      run: |
+          pip install twine
+    - name: Publish package to Test
+      run: |
+        /bin/bash -x run.sh publish:test
+      env:
+        TEST_PYPI_TOKEN: ${{ secrets.TEST_PYPI_TOKEN }}
+    - name: Publish package to Prod
+      run: |
+        /bin/bash -x run.sh publish:prod
+      env:
+        PROD_PYPI_TOKEN: ${{ secrets.PROD_PYPI_TOKEN }}
+    - name: Push Tags
+      run: |
+          git push --tags
