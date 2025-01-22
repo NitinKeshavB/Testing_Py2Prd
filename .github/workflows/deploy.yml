@@ -19,13 +19,14 @@ jobs:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
     - name: Tag Versions
       run: |
-          VERSION_TAG=$(git tag $(cat version.txt))
+          git tag $(cat version.txt)
 
   linting-code-quality-check:
     runs-on: ubuntu-latest
