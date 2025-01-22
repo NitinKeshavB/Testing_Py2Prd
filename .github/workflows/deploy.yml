@@ -43,18 +43,13 @@ jobs:
           pip install pre-commit
     - name: lint and code quality
       run: |
-          /bin/bash -x run.sh lint 
+          /bin/bash -x run.sh lint
 
   build-wheel-test:
-    needs:
-      - check-versions
-      - linting-code-quality-check
-
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: ["3.9"]
-
     steps:
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
@@ -67,7 +62,7 @@ jobs:
         pip install pytest-cov
     - name: testing package
       run: |
-            /bin/bash -x run.sh test:all    
+            /bin/bash -x run.sh test:all
     - name: Build dependencies
       run: |
           /bin/bash -x run.sh build
@@ -86,7 +81,7 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.9"]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'    
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
