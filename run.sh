@@ -25,14 +25,16 @@ function start {
 }
 
 function try-load-dotenv {
-    if [ ! -f "$THIS_DIR/.env" ]; then
-        echo "no .env file found"
-        return 1
+    if [ -f "$THIS_DIR/.env" ]; then
+        
+        
+        while read -r line; do
+            export "$line"
+        done < <(grep -v '^#' "$THIS_DIR/.env" | grep -v '^$')
+    else {
+        echo "No .env file found"
+    }
     fi
-
-    while read -r line; do
-        export "$line"
-    done < <(grep -v '^#' "$THIS_DIR/.env" | grep -v '^$')
 }
 
 function publish:test {
