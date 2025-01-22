@@ -26,8 +26,8 @@ function start {
 
 function try-load-dotenv {
     if [ -f "$THIS_DIR/.env" ]; then
-        
-        
+
+
         while read -r line; do
             export "$line"
         done < <(grep -v '^#' "$THIS_DIR/.env" | grep -v '^$')
