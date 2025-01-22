@@ -25,7 +25,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Tag Versions
       run: |
-          git tag $(cat version.txt)
+          VERSION_TAG=$(git tag $(cat version.txt))
 
   linting-code-quality-check:
     runs-on: ubuntu-latest
@@ -107,4 +107,4 @@ jobs:
         PROD_PYPI_TOKEN: ${{ secrets.PROD_PYPI_TOKEN }}
     - name: Push Tags
       run: |
-          git push -f origin --tags
+          git push origin $VERSION_TAG
